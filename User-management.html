@@ -48,17 +48,19 @@
                 <div class="bg-white dark:bg-slate-800 p-8 rounded-2xl shadow-sm border border-slate-200 dark:border-slate-700 sticky top-24">
                     <h2 class="text-2xl font-bold text-slate-800 dark:text-white mb-6">Create Account</h2>
                     
-                    <form id="registrationForm" class="space-y-5">
+                    <form id="registrationForm" class="space-y-5" novalidate>
                         <div>
                             <label class="block text-sm font-semibold text-slate-700 dark:text-slate-300 mb-2">First Name</label>
-                            <input type="text" id="firstName" required placeholder="Jane"
+                            <input type="text" id="firstName" placeholder="Jane"
                                 class="w-full px-4 py-3 rounded-xl border border-slate-200 dark:border-slate-600 bg-white dark:bg-slate-700 text-slate-900 dark:text-white focus:ring-2 focus:ring-indigo-500 outline-none transition-all">
+                            <p id="firstNameError" class="mt-1 text-xs text-rose-500 hidden italic">First name must be at least 2 characters.</p>
                         </div>
                         
                         <div>
                             <label class="block text-sm font-semibold text-slate-700 dark:text-slate-300 mb-2">Last Name</label>
-                            <input type="text" id="lastName" required placeholder="Doe"
+                            <input type="text" id="lastName" placeholder="Doe"
                                 class="w-full px-4 py-3 rounded-xl border border-slate-200 dark:border-slate-600 bg-white dark:bg-slate-700 text-slate-900 dark:text-white focus:ring-2 focus:ring-indigo-500 outline-none transition-all">
+                            <p id="lastNameError" class="mt-1 text-xs text-rose-500 hidden italic">Last name must be at least 2 characters.</p>
                         </div>
                         
                         <div>
@@ -77,8 +79,9 @@
                         
                         <div>
                             <label class="block text-sm font-semibold text-slate-700 dark:text-slate-300 mb-2">Password</label>
-                            <input type="password" id="password" required placeholder="••••••••"
+                            <input type="password" id="password" placeholder="••••••••"
                                 class="w-full px-4 py-3 rounded-xl border border-slate-200 dark:border-slate-600 bg-white dark:bg-slate-700 text-slate-900 dark:text-white focus:ring-2 focus:ring-indigo-500 outline-none transition-all">
+                            <p id="passwordError" class="mt-1 text-xs text-rose-500 hidden italic">Password must be at least 6 characters.</p>
                         </div>
 
                         <button type="submit" 
@@ -178,8 +181,29 @@
             });
         }
 
+        function validateField(id, errorId, minLength) {
+            const field = document.getElementById(id);
+            const error = document.getElementById(errorId);
+            if (field.value.trim().length < minLength) {
+                field.classList.add('border-rose-500', 'ring-2', 'ring-rose-200');
+                error.classList.remove('hidden');
+                return false;
+            } else {
+                field.classList.remove('border-rose-500', 'ring-2', 'ring-rose-200');
+                error.classList.add('hidden');
+                return true;
+            }
+        }
+
         form.addEventListener('submit', (e) => {
             e.preventDefault();
+            
+            const isFirstValid = validateField('firstName', 'firstNameError', 2);
+            const isLastValid = validateField('lastName', 'lastNameError', 2);
+            const isPassValid = validateField('password', 'passwordError', 6);
+
+            if (!isFirstValid || !isLastValid || !isPassValid) return;
+
             userCount++;
             const firstName = document.getElementById('firstName').value;
             const lastName = document.getElementById('lastName').value;
