@@ -203,21 +203,34 @@
             const isFirstValid = validateField('firstName', 'firstNameError', 2);
             const isLastValid = validateField('lastName', 'lastNameError', 2);
             const isPassValid = validateField('password', 'passwordError', 6);
+            const duplicateError = document.getElementById('duplicateError');
 
             if (!isFirstValid || !isLastValid || !isPassValid) return;
 
-            userCount++;
-            const firstName = document.getElementById('firstName').value;
-            const lastName = document.getElementById('lastName').value;
+            const firstName = document.getElementById('firstName').value.trim();
+            const lastName = document.getElementById('lastName').value.trim();
+            const fullName = `${firstName} ${lastName}`;
             const gender = document.querySelector('input[name="gender"]:checked').value;
             
+            // Duplicate Check
+            const existingUsers = Array.from(tableBody.querySelectorAll('tr:not(#emptyRow) td:nth-child(2)'))
+                .map(td => td.textContent.trim());
+
+            if (existingUsers.includes(fullName)) {
+                duplicateError.classList.remove('hidden');
+                return;
+            } else {
+                duplicateError.classList.add('hidden');
+            }
+
+            userCount++;
             updateState();
 
             const row = document.createElement('tr');
             row.className = 'hover:bg-slate-50/80 dark:hover:bg-slate-700/50 transition-colors fade-in';
             row.innerHTML = `
                 <td class="px-8 py-5 text-sm font-medium text-slate-400 dark:text-slate-500 row-index">${userCount}</td>
-                <td class="px-8 py-5 text-sm font-bold text-slate-800 dark:text-white">${firstName} ${lastName}</td>
+                <td class="px-8 py-5 text-sm font-bold text-slate-800 dark:text-white">${fullName}</td>
                 <td class="px-8 py-5 text-sm text-slate-600 dark:text-slate-400">${gender}</td>
                 <td class="px-8 py-5">
                     <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-green-100 dark:bg-green-900/30 text-green-800 dark:text-green-400">
