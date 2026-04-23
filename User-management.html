@@ -177,14 +177,45 @@
                 row.querySelector('.row-index').textContent = index + 1;
             });
         }
-        function registrationForm(){
+
+        form.addEventListener('submit', (e) => {
+            e.preventDefault();
+            userCount++;
+            const firstName = document.getElementById('firstName').value;
+            const lastName = document.getElementById('lastName').value;
+            const gender = document.querySelector('input[name="gender"]:checked').value;
             
+            updateState();
+
+            const row = document.createElement('tr');
+            row.className = 'hover:bg-slate-50/80 dark:hover:bg-slate-700/50 transition-colors fade-in';
+            row.innerHTML = `
+                <td class="px-8 py-5 text-sm font-medium text-slate-400 dark:text-slate-500 row-index">${userCount}</td>
+                <td class="px-8 py-5 text-sm font-bold text-slate-800 dark:text-white">${firstName} ${lastName}</td>
+                <td class="px-8 py-5 text-sm text-slate-600 dark:text-slate-400">${gender}</td>
+                <td class="px-8 py-5">
+                    <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-green-100 dark:bg-green-900/30 text-green-800 dark:text-green-400">
+                        Active
+                    </span>
+                </td>
+                <td class="px-8 py-5">
+                    <button class="remove-btn text-rose-500 hover:text-rose-700 dark:text-rose-400 dark:hover:text-rose-300 text-xs font-bold transition-colors">
+                        Remove
+                    </button>
+                </td>
+            `;
             
-        }
+            row.querySelector('.remove-btn').addEventListener('click', () => {
+                row.remove();
+                userCount--;
+                updateState();
+            });
 
-
-
-
+            tableBody.appendChild(row);
+            successMsg.classList.remove('hidden');
+            setTimeout(() => successMsg.classList.add('hidden'), 3000);
+            form.reset();
+        });
     </script>
 </body>
 </html>
