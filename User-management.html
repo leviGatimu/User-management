@@ -158,6 +158,7 @@
         let userCount = 0;
 
         function updateState() {
+            
             userCountBadge.textContent = `${userCount} ${userCount === 1 ? 'User' : 'Users'}`;
             if (userCount === 0) {
                 tableBody.innerHTML = `
@@ -177,6 +178,8 @@
                 row.querySelector('.row-index').textContent = index + 1;
             });
         }
+
+
 
 
     </script>
